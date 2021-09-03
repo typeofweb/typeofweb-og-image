@@ -1,0 +1,80 @@
+.overlay {
+  all: unset;
+  display: block;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  width: 100%;
+  aspect-ratio: calc(1200 / 628);
+  outline: 2px solid red;
+  overflow: hidden;
+  background: no-repeat center center / 100%;
+}
+
+.overlay img {
+  max-width: 100%;
+}
+
+.overlay code {
+  color: #D400FF;
+  font-family: 'Fira Mono';
+  white-space: pre-wrap;
+  letter-spacing: -5px;
+}
+
+.overlay code:before, .overlay code:after {
+  content: '\`';
+}
+
+.cover {
+  all: unset;
+  display: block;
+  background: rgba(0, 0, 0, 0.35);
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  justify-items: center;
+}
+
+.spacer {
+  all: unset;
+  display: flex;
+  margin: 0 10%;
+  flex-direction: column;
+}
+
+.logoWrapper {
+  all: unset;
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  justify-items: center;
+}
+
+.logo {
+  all: unset;
+  display: block;
+}
+
+.heading {
+  all: unset;
+  display: block;
+  font-family: 'Fira Sans';
+  font-style: normal;
+  color: white;
+  line-height: 1.3;
+  text-align: center;
+  white-space: pre-wrap;
+}
+
+.emoji {
+  height: 1em;
+  width: 1em;
+  margin: 0 .05em 0 .1em;
+  vertical-align: -0.1em;
+}

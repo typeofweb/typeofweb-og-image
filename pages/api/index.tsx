@@ -6,6 +6,7 @@ import { ParsedRequest } from "../../utils/types";
 import { renderToString } from "react-dom/server";
 import { CoverImage } from "../../components/CoverImage";
 import { publicUrl } from "../../utils/constants";
+import { fontCss } from "../../utils/fonts";
 
 export default async function handler(
   req: NextApiRequest,
@@ -26,6 +27,7 @@ export default async function handler(
 <base href="${process.env.NEXT_PUBLIC_HOST}" />
 <style>${appCss}</style>
 <style>${coverImageCss}</style>
+<style>${fontCss}</style>
 ${getHtml(parsedReq)}
       `.trim();
 

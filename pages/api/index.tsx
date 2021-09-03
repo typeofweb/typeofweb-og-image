@@ -2,14 +2,16 @@ import { NextApiRequest, NextApiResponse } from "next";
 import chrome from "chrome-aws-lambda";
 import puppeteer from "puppeteer-core";
 import { getArray, getString } from "../../utils/parseRequest";
-import { FileType, ParsedRequest } from "../../utils/types";
+import { ParsedRequest } from "../../utils/types";
 import { renderToString } from "react-dom/server";
 import Fs from "fs";
 import Path from "path";
 import { CoverImage } from "../../components/CoverImage";
 
+console.log({ __dirname, "process.cwd()": process.cwd() });
+
 const publicPath = process.env.VERCEL
-  ? process.cwd()
+  ? __dirname
   : Path.join(process.cwd(), "public");
 
 export default async function handler(

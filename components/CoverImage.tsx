@@ -1,6 +1,6 @@
 import marked from "marked";
 import { getDefaultImages } from "../utils/parseRequest";
-import { ImageProps } from "../utils/types";
+import { ImageProps } from "../utils/types";;
 
 export const CoverImage = ({
   images,

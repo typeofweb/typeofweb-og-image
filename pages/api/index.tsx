@@ -4,15 +4,8 @@ import puppeteer from "puppeteer-core";
 import { getArray, getString } from "../../utils/parseRequest";
 import { ParsedRequest } from "../../utils/types";
 import { renderToString } from "react-dom/server";
-import Fs from "fs";
-import Path from "path";
 import { CoverImage } from "../../components/CoverImage";
-
-console.log({ __dirname, "process.cwd()": process.cwd() });
-
-const publicPath = process.env.VERCEL
-  ? __dirname
-  : Path.join(process.cwd(), "public");
+import { publicUrl } from "../../utils/constants";
 
 export default async function handler(
   req: NextApiRequest,
@@ -86,14 +79,14 @@ async function getScreenshot(html: string) {
 ${html}
   `.trim()
     );
-    const appCss = Fs.readFileSync(
-      Path.join(publicPath, "styles.css"),
-      "utf-8"
-    );
-    const coverImageCss = Fs.readFileSync(
-      Path.join(publicPath, "coverImage.css"),
-      "utf-8"
-    );
+    const appCssUrl = `${publicUrl}/styles.css`;
+    const coverImageCssUrl = `${publicUrl}/coverImage.css`;
+
+    const [appCss, coverImageCss] = await Promise.all([
+      fetch(appCssUrl).then(r => r.text()),
+      fetch(coverImageCssUrl).then(r => r.text()),
+    ]);
+
     await page.addStyleTag({ content: appCss });
     await page.addStyleTag({ content: coverImageCss });
     const file = await page.screenshot({ type: "png" });

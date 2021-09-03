@@ -1,6 +1,4 @@
-import { ParsedRequest } from "./types";
-import { parse } from "url";
-import { NextApiRequest } from "next";
+import { publicUrl } from "./constants";
 
 export function getArray(
   stringOrArray: string[] | string | undefined
@@ -27,7 +25,7 @@ export function getString(
 }
 
 export function getDefaultImages(images: string[]): string[] {
-  const defaultImage = `http://${process.env.NEXT_PUBLIC_HOST}/typeofweb-logo-white.svg`;
+  const defaultImage = `${publicUrl}/typeofweb-logo-white.svg`;
 
   if (!images?.[0]) {
     return [defaultImage];

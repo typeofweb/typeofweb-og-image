@@ -40,7 +40,7 @@ export default class MyDocument extends Document {
               font-family: 'Fira Mono';
               font-style: normal;
               font-weight: normal;
-              src: url(data:font/woff2;charset=utf-8;base64,${mono})  format("woff2");
+              src: url(data:font/woff2;charset=utf-8;base64,${mono}) format("woff2");
             }
           `}} />
         </Head>

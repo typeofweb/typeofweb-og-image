@@ -1,5 +1,5 @@
 import { useRouter } from "next/dist/client/router";
-import { createElement, useEffect, useState } from "react";
+import { createElement, useEffect, useRef, useState } from "react";
 import { CoverImage } from "../components/CoverImage";
 import { getArray } from "../utils/parseRequest";
 
@@ -64,9 +64,11 @@ const predefinedColors = [
 ];
 
 export default function Home() {
+  const [didRender, setDidRender] = useState(false);
+
   const [text, setText] = useUrlState<string>("text", "");
-  const [fontSize, setFontSize] = useUrlState<string>("fontSize", "60");
-  const [gap, setGap] = useUrlState<string>("gap", "30");
+  const [fontSize, setFontSize] = useUrlState<string>("fontSize", "100");
+  const [gap, setGap] = useUrlState<string>("gap", "100");
   const [images, setImages] = useUrlState<string[]>("images", []);
   const [widths, setWidths] = useUrlState<string[]>("widths", []);
   const [heights, setHeights] = useUrlState<string[]>("heights", []);
@@ -79,7 +81,15 @@ export default function Home() {
     "0.45"
   );
 
+  useEffect(() => {
+    setDidRender(true);
+  }, [])
+
   const router = useRouter();
+
+  if (!didRender) {
+    return null;
+  }
 
   return (
     <div>
@@ -147,7 +157,7 @@ export default function Home() {
           ))}
         </div>
       </section>
-      <section>
+      <section className="result">
         <a href={`/api${router.asPath}`} target="_blank" rel="noreferrer">
         <CoverImage
           text={text}

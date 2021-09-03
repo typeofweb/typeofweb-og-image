@@ -35,3 +35,44 @@ label :is(input, textarea) {
 label, label :is(input, textarea) {
   font-size: 1.5rem;
 }
+
+.result {
+  transform-origin: 0 0;
+  transform: scale(0.1666666667);
+}
+
+@media screen and (min-width: 480px) {
+  .result {
+    transform: scale(0.25);
+  } 
+}
+
+@media screen and (min-width: 720px) {
+  .result {
+    transform: scale(0.375);
+  } 
+}
+
+@media screen and (min-width: 960px) {
+  .result {
+    transform: scale(0.5);
+  } 
+}
+
+@media screen and (min-width: 1200px) {
+  .result {
+    transform: scale(0.625);
+  } 
+}
+
+@media screen and (min-width: 1440px) {
+  .result {
+    transform: scale(0.75);
+  } 
+}
+
+@media screen and (min-width: 1920px) {
+  .result {
+    transform: scale(1);
+  } 
+}

@@ -13,7 +13,25 @@ export default async function handler(
 ) {
   try {
     const parsedReq = parseRequest(req);
-    const html = getHtml(parsedReq);
+    const appCssUrl = `${publicUrl}/styles.css`;
+    const coverImageCssUrl = `${publicUrl}/coverImage.css`;
+
+    const [appCss, coverImageCss] = await Promise.all([
+      fetch(appCssUrl).then((r) => r.text()),
+      fetch(coverImageCssUrl).then((r) => r.text()),
+    ]);
+
+    const html = `
+<!doctype html>
+<base href="${process.env.NEXT_PUBLIC_HOST}" />
+<style>${appCss}</style>
+<style>${coverImageCss}</style>
+${getHtml(parsedReq)}
+      `.trim();
+
+      // res.setHeader("Content-Type", "text/html");
+      // res.end(html);
+
     const file = await getScreenshot(html);
     res.statusCode = 200;
     res.setHeader("Content-Type", `image/png`);
@@ -71,24 +89,10 @@ async function getScreenshot(html: string) {
   const browser = await getBrowser();
   try {
     const page = await browser.newPage();
-    await page.setViewport({ width: 1200, height: 628 });
-    await page.setContent(
-      `
-<!doctype html>
-<base href="${process.env.NEXT_PUBLIC_HOST}" />
-${html}
-  `.trim()
-    );
-    const appCssUrl = `${publicUrl}/styles.css`;
-    const coverImageCssUrl = `${publicUrl}/coverImage.css`;
+    const ratio = 1200 / 628;
+    await page.setViewport({ width: 1920, height: 1920 / ratio | 0 });
+    await page.setContent(html);
 
-    const [appCss, coverImageCss] = await Promise.all([
-      fetch(appCssUrl).then(r => r.text()),
-      fetch(coverImageCssUrl).then(r => r.text()),
-    ]);
-
-    await page.addStyleTag({ content: appCss });
-    await page.addStyleTag({ content: coverImageCss });
     const file = await page.screenshot({ type: "png" });
     return file;
   } finally {

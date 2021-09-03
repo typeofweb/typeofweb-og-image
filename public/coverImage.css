@@ -4,11 +4,14 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  width: 100%;
+  width: 1920px;
   aspect-ratio: calc(1200 / 628);
-  outline: 2px solid red;
   overflow: hidden;
   background: no-repeat center center / 100%;
+}
+
+a {
+  text-decoration: none !important;
 }
 
 .overlay img {
@@ -59,6 +62,7 @@
 .logo {
   all: unset;
   display: block;
+  width: 900px;
 }
 
 .heading {

@@ -148,7 +148,7 @@ export default function Home() {
         </div>
       </section>
       <section>
-        <a href={`/api${router.asPath}`} target="_blank">
+        <a href={`/api${router.asPath}`} target="_blank" rel="noreferrer">
         <CoverImage
           text={text}
           images={getArray(images)}

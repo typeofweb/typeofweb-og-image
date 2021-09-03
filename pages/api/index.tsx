@@ -1,20 +1,16 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import core from "puppeteer-core";
+import chrome from "chrome-aws-lambda";
+import puppeteer from "puppeteer-core";
 import { getArray, getString } from "../../utils/parseRequest";
 import { FileType, ParsedRequest } from "../../utils/types";
 import { renderToString } from "react-dom/server";
 import Fs from "fs";
 import Path from "path";
 import { CoverImage } from "../../components/CoverImage";
-import chrome from "chrome-aws-lambda";
-const exePath =
-  process.platform === "win32"
-    ? "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"
-    : process.platform === "linux"
-    ? "/usr/bin/google-chrome"
-    : "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 
-const isDev = !process.env.AWS_REGION;
+const publicPath = process.env.VERCEL
+  ? process.cwd()
+  : Path.join(process.cwd(), "public");
 
 export default async function handler(
   req: NextApiRequest,
@@ -23,10 +19,9 @@ export default async function handler(
   try {
     const parsedReq = parseRequest(req);
     const html = getHtml(parsedReq);
-    const { fileType } = parsedReq;
-    const file = await getScreenshot(html, fileType, isDev);
+    const file = await getScreenshot(html);
     res.statusCode = 200;
-    res.setHeader("Content-Type", `image/${fileType}`);
+    res.setHeader("Content-Type", `image/png`);
     res.setHeader(
       "Cache-Control",
       `public, immutable, no-transform, s-maxage=31536000, max-age=31536000`
@@ -40,9 +35,8 @@ export default async function handler(
   }
 }
 
-function getHtml({ fileType, ...props }: ParsedRequest) {
-  const el = <CoverImage {...props} />;
-  return renderToString(el);
+function getHtml(props: ParsedRequest) {
+  return renderToString(<CoverImage {...props} />);
 }
 
 function parseRequest(req: NextApiRequest): ParsedRequest {
@@ -55,53 +49,54 @@ function parseRequest(req: NextApiRequest): ParsedRequest {
     gap: req.query.gap + "px",
     overlayColor: getString(req.query.overlayColor),
     overlayOpacity: getString(req.query.overlayOpacity),
-    fileType: "png",
   };
 }
 
-let mutablePage: core.Page | null;
-async function getPage(isDev: boolean) {
-  if (mutablePage) {
-    return mutablePage;
-  }
-
-  const options = await getOptions(isDev);
-  const browser = await core.launch(options);
-  mutablePage = await browser.newPage();
-  return mutablePage;
+async function getBrowser() {
+  const options = process.env.AWS_REGION
+    ? {
+        args: chrome.args,
+        executablePath: await chrome.executablePath,
+        headless: chrome.headless,
+      }
+    : {
+        args: [],
+        executablePath:
+          process.platform === "win32"
+            ? "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"
+            : process.platform === "linux"
+            ? "/usr/bin/google-chrome"
+            : "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+      };
+  const browser = await puppeteer.launch(options);
+  return browser;
 }
 
-async function getScreenshot(html: string, type: FileType, isDev: boolean) {
-  const page = await getPage(isDev);
-  await page.setViewport({ width: 1200, height: 628 });
-  await page.setContent(`
+async function getScreenshot(html: string) {
+  const browser = await getBrowser();
+  try {
+    const page = await browser.newPage();
+    await page.setViewport({ width: 1200, height: 628 });
+    await page.setContent(
+      `
 <!doctype html>
 <base href="${process.env.NEXT_PUBLIC_HOST}" />
 ${html}
-  `.trim());
-  const appCss = Fs.readFileSync(Path.join(process.cwd(), "styles.css"), "utf-8");
-  const coverImageCss = Fs.readFileSync(
-    Path.join(process.cwd(), "coverImage.css"),
-    "utf-8"
-  );
-  await page.addStyleTag({ content: appCss });
-  await page.addStyleTag({ content: coverImageCss });
-  const file = await page.screenshot({ type });
-  return file;
-}
-
-async function getOptions(isDev: boolean) {
-  if (isDev) {
-    return {
-      args: [],
-      executablePath: exePath,
-      headless: true,
-    };
-  } else {
-    return {
-      args: chrome.args,
-      executablePath: await chrome.executablePath,
-      headless: chrome.headless,
-    };
+  `.trim()
+    );
+    const appCss = Fs.readFileSync(
+      Path.join(publicPath, "styles.css"),
+      "utf-8"
+    );
+    const coverImageCss = Fs.readFileSync(
+      Path.join(publicPath, "coverImage.css"),
+      "utf-8"
+    );
+    await page.addStyleTag({ content: appCss });
+    await page.addStyleTag({ content: coverImageCss });
+    const file = await page.screenshot({ type: "png" });
+    return file;
+  } finally {
+    browser.close();
   }
 }

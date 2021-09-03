@@ -1,7 +1,6 @@
 export type FileType = "png" | "jpeg";
 
 export interface ParsedRequest extends ImageProps {
-  fileType: FileType;
 }
 
 export interface ImageProps {

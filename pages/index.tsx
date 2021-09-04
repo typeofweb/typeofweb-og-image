@@ -27,11 +27,14 @@ const useUrlState = <T extends string | string[]>(
   name: string,
   defaultValue: T
 ): [T, (val: T) => void] => {
+  const isArray = Array.isArray(defaultValue);
+  const cast = (v: string | string[]) => isArray ? getArray(v) : v;
+
   const router = useRouter();
-  const state = router.query[name] || defaultValue;
+  const state = cast(router.query[name] || defaultValue);
 
   useEffect(() => {
-    setCachedState(router.query[name] || defaultValue);
+    setCachedState(cast(router.query[name] || defaultValue));
   }, [router.query[name]]);
   const [cachedState, setCachedState] = useState(state);
   const updateRouter = (val: T) => {
@@ -50,10 +53,10 @@ const useUrlState = <T extends string | string[]>(
     );
   };
   const setState = (val: T) => {
-    setCachedState(val);
+    setCachedState(cast(val));
     updateRouter(val);
   };
-  return [cachedState as T, setState];
+  return [cast(cachedState) as T, setState];
 };
 
 const predefinedColors = [
@@ -110,6 +113,47 @@ export default function Home() {
           value={decode(text)}
           onInput={(t) => setText(encode(t))}
         />
+        {images.map((image, i) => {
+          return (
+            <div key={i}>
+              <Input
+                as="input"
+                label={`$${i + 1}`}
+                type="url"
+                value={image}
+                onInput={(v) => {
+                  const newImages = [...images];
+                  newImages[i] = v;
+                  setImages(newImages);
+                }}
+              />
+              <Input
+                as="input"
+                label={`width $${i + 1}`}
+                type="number"
+                step={1}
+                value={widths[i] || "200"}
+                onInput={(v) => {
+                  const newWidths = [...widths];
+                  newWidths[i] = v;
+                  setWidths(newWidths);
+                }}
+              />
+              <button type="button" onClick={() => {
+                setImages(images.slice(0, i).concat(images.slice(i + 1)));
+                // setWidths(widths.slice(0, i).concat(widths.slice(i + 1)));
+              }}>
+                Usuń {i + 1}
+              </button>
+            </div>
+          );
+        })}
+        <button type="button" onClick={() => {
+          setImages([...images, "URL"])
+          // setWidths([...widths, "200"])
+        }}>
+          Dodaj obrazek
+        </button>
         <Input
           as="input"
           label="Font Size"
@@ -175,7 +219,9 @@ export default function Home() {
           Otwórz plik
         </a>{" "}
         <a
-          href={`https://res.cloudinary.com/type-of-web/image/fetch/${encodeURIComponent(urlToImage)}`}
+          href={`https://res.cloudinary.com/type-of-web/image/fetch/${encodeURIComponent(
+            urlToImage
+          )}`}
           target="_blank"
           rel="noreferrer"
         >

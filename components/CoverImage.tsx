@@ -1,13 +1,18 @@
 import marked from "marked";
 import { getDefaultImages } from "../utils/parseRequest";
 import { ImageProps } from "../utils/types";
-import twemoji from 'twemoji';
+import twemoji from "twemoji";
 import { publicUrl } from "../utils/constants";
 
-const emojify = (text: string) => twemoji.parse(text, (icon) => {
-  const img = icon.toLowerCase().split('-').filter(u => u !== 'fe0f' && u!=='fe0e').join('_');
-  return `https://github.com/typeofweb/apple-emoji-linux/raw/master/png/128/emoji_u${img}.png`;
-});
+const emojify = (text: string) =>
+  twemoji.parse(text, (icon) => {
+    const img = icon
+      .toLowerCase()
+      .split("-")
+      .filter((u) => u !== "fe0f" && u !== "fe0e")
+      .join("_");
+    return `https://github.com/typeofweb/apple-emoji-linux/raw/master/png/128/emoji_u${img}.png`;
+  });
 
 export const CoverImage = ({
   images,
@@ -21,7 +26,11 @@ export const CoverImage = ({
 }: ImageProps) => {
   const opacity = ((Number(overlayOpacity) * 255) | 0).toString(16);
   const color = overlayColor + opacity;
-  images = getDefaultImages(images);
+  const logo = `${publicUrl}/typeofweb-logo-white.svg`;
+
+  const html = emojify(marked(text)).trim();
+  const output = addImages(html, images, widths);
+
   return (
     <div
       className={"overlay"}
@@ -32,24 +41,24 @@ export const CoverImage = ({
       <div className={"cover"} style={{ backgroundColor: color }}>
         <div className={"spacer"} style={{ gap }}>
           <div className={"logoWrapper"}>
-            {images.map((img, i) => (
-              <img
-                key={img + "_" + i}
-                className={"logo"}
-                alt="Generated Image"
-                src={img}
-                width={widths[i]}
-                height={heights[i]}
-              />
-            ))}
+            <img className={"logo"} alt="" src={logo} />
           </div>
           <div
             className={"heading"}
             style={{ fontSize }}
-            dangerouslySetInnerHTML={{ __html: emojify(marked(text)).trim() }}
+            dangerouslySetInnerHTML={{ __html: output }}
           />
         </div>
       </div>
     </div>
   );
 };
+
+const PATTERN = /\$(\d+)/g;
+function addImages(html: string, images: string[], widths: string[]): string {
+  console.log(html);
+  return html.replace(PATTERN, (_, match) => {
+    const idx = match-1;
+    return `<img alt="" src="${images[idx]}" width="${widths[idx] || 200}px" />`
+  });
+}

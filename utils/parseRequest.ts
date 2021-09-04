@@ -23,12 +23,3 @@ export function getString(
     return stringOrArray;
   }
 }
-
-export function getDefaultImages(images: string[]): string[] {
-  const defaultImage = `${publicUrl}/typeofweb-logo-white.svg`;
-
-  if (!images?.[0]) {
-    return [defaultImage];
-  }
-  return images;
-}

@@ -2,6 +2,7 @@ import marked from "marked";
 import { getDefaultImages } from "../utils/parseRequest";
 import { ImageProps } from "../utils/types";
 import twemoji from 'twemoji';
+import { publicUrl } from "../utils/constants";
 
 const emojify = (text: string) => twemoji.parse(text, (icon) => {
   const img = icon.toLowerCase().split('-').filter(u => u !== 'fe0f' && u!=='fe0e').join('_');
@@ -25,7 +26,7 @@ export const CoverImage = ({
     <div
       className={"overlay"}
       style={{
-        backgroundImage: `url('http://${process.env.NEXT_PUBLIC_HOST}/og-cover-bg.png')`,
+        backgroundImage: `url('${publicUrl}/og-cover-bg.png')`,
       }}
     >
       <div className={"cover"} style={{ backgroundColor: color }}>

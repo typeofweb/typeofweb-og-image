@@ -99,7 +99,7 @@ export default function Home() {
     return null;
   }
 
-  const urlToImage = `${publicUrl}/api${router.asPath}`;
+  const urlToImage = `${publicUrl}/api/${location.search}`;
 
   return (
     <div className="container">
@@ -175,7 +175,7 @@ export default function Home() {
           Otwórz plik
         </a>{" "}
         <a
-          href={`https://res.cloudinary.com/type-of-web/image/fetch/${urlToImage}`}
+          href={`https://res.cloudinary.com/type-of-web/image/fetch/${encodeURIComponent(urlToImage)}`}
           target="_blank"
           rel="noreferrer"
         >

@@ -95,7 +95,7 @@ export default function Home() {
   const urlToImage = `${publicUrl}/api${router.asPath}`;
 
   return (
-    <div>
+    <div className="container">
       <section>
         <Input as="textarea" label="Tekst" value={text} onInput={setText} />
         <Input

@@ -11,7 +11,6 @@ body {
   max-width: 100% !important;
 }
 
-
 label {
   display: flex;
   flex-direction: column;
@@ -25,14 +24,15 @@ textarea {
 }
 
 input[type="color"] {
-  height:10rem;
+  height: 10rem;
 }
 
 label :is(input, textarea) {
   margin-top: 0.5rem;
 }
 
-label, label :is(input, textarea) {
+label,
+label :is(input, textarea) {
   font-size: 1.5rem;
 }
 
@@ -44,35 +44,50 @@ label, label :is(input, textarea) {
 @media screen and (min-width: 480px) {
   .result {
     transform: scale(0.25);
-  } 
+  }
 }
 
 @media screen and (min-width: 720px) {
   .result {
     transform: scale(0.375);
-  } 
+  }
 }
 
 @media screen and (min-width: 960px) {
   .result {
     transform: scale(0.5);
-  } 
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .container {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .container > section {
+    flex: 0 0 50%;
+  }
+
+  .result {
+    transform: scale(calc(0.5333333333 / 2));
+  }
 }
 
 @media screen and (min-width: 1200px) {
   .result {
-    transform: scale(0.625);
-  } 
+    transform: scale(calc(0.625 / 2));
+  }
 }
 
 @media screen and (min-width: 1440px) {
   .result {
-    transform: scale(0.75);
-  } 
+    transform: scale(calc(0.75 / 2));
+  }
 }
 
 @media screen and (min-width: 1920px) {
   .result {
-    transform: scale(1);
-  } 
+    transform: scale(calc(1 / 2));
+  }
 }

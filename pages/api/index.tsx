@@ -65,7 +65,7 @@ function parseRequest(req: NextApiRequest): ParsedRequest {
     heights: getArray(req.query.heights),
     fontSize: (req.query.fontSize || 100) + "px",
     gap: (req.query.gap || 100) + "px",
-    overlayColor: getString(req.query.overlayColor),
+    overlayColor: '#' + getString(req.query.overlayColor),
     overlayOpacity: getString(req.query.overlayOpacity),
   };
 }

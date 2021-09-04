@@ -99,7 +99,7 @@ export default function Home() {
     return null;
   }
 
-  const urlToImage = `${publicUrl}/api/${location.search}`;
+  const urlToImage = `${publicUrl}/api${location.search}`;
 
   return (
     <div className="container">

@@ -1,5 +1,4 @@
 import marked from "marked";
-import { getDefaultImages } from "../utils/parseRequest";
 import { ImageProps } from "../utils/types";
 import twemoji from "twemoji";
 import { publicUrl } from "../utils/constants";
@@ -58,7 +57,8 @@ const PATTERN = /\$(\d+)/g;
 function addImages(html: string, images: string[], widths: string[]): string {
   console.log(html);
   return html.replace(PATTERN, (_, match) => {
-    const idx = match-1;
+    const idx = match - 1;
+    // prettier-ignore
     return `<img alt="" src="${images[idx]}" width="${widths[idx] || 200}px" />`
   });
 }

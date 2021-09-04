@@ -31,8 +31,11 @@ export default async function handler(
 ${getHtml(parsedReq)}
       `.trim();
 
-      // res.setHeader("Content-Type", "text/html");
-      // res.end(html);
+    if (req.query.debug) {
+      res.setHeader("Content-Type", "text/html");
+      res.end(html);
+      return;
+    }
 
     const file = await getScreenshot(html);
     res.statusCode = 200;
@@ -92,7 +95,7 @@ async function getScreenshot(html: string) {
   try {
     const page = await browser.newPage();
     const ratio = 1200 / 628;
-    await page.setViewport({ width: 1920, height: 1920 / ratio | 0 });
+    await page.setViewport({ width: 1920, height: (1920 / ratio) | 0 });
     await page.setContent(html);
 
     const file = await page.screenshot({ type: "png" });

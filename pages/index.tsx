@@ -57,12 +57,19 @@ const useUrlState = <T extends string | string[]>(
 };
 
 const predefinedColors = [
-  { name: "Szarawy", color: "#000000", opacity: "0.35" },
-  { name: "TypeScript", color: "#0070BC", opacity: "0.60" },
-  { name: "Wpisy", color: "#291B4A", opacity: "0.60" },
-  { name: "MongoDB", color: "#227F59", opacity: "0.20" },
-  { name: "Hooki", color: "#1C0202", opacity: "0.35" },
+  { name: "Szarawy", color: "000000", opacity: "0.35" },
+  { name: "TypeScript", color: "0070BC", opacity: "0.60" },
+  { name: "Wpisy", color: "291B4A", opacity: "0.60" },
+  { name: "MongoDB", color: "227F59", opacity: "0.20" },
+  { name: "Hooki", color: "1C0202", opacity: "0.35" },
 ];
+
+const encode = (str: string): string => {
+  return str;
+};
+const decode = (str: string): string => {
+  return str;
+};
 
 export default function Home() {
   const [didRender, setDidRender] = useState(false);
@@ -75,7 +82,7 @@ export default function Home() {
   const [heights, setHeights] = useUrlState<string[]>("heights", []);
   const [overlayColor, setOverlayColor] = useUrlState<string>(
     "overlayColor",
-    "#000000"
+    "000000"
   );
   const [overlayOpacity, setOverlayOpacity] = useUrlState<string>(
     "overlayOpacity",
@@ -97,7 +104,12 @@ export default function Home() {
   return (
     <div className="container">
       <section>
-        <Input as="textarea" label="Tekst" value={text} onInput={setText} />
+        <Input
+          as="textarea"
+          label="Tekst"
+          value={decode(text)}
+          onInput={(t) => setText(encode(t))}
+        />
         <Input
           as="input"
           label="Font Size"
@@ -119,8 +131,8 @@ export default function Home() {
           label={`Overlay Color ${overlayColor}`}
           type="color"
           step="1"
-          value={overlayColor}
-          onInput={setOverlayColor}
+          value={"#" + overlayColor}
+          onInput={(c) => setOverlayColor(c.replace("#", ""))}
           style={{ opacity: overlayOpacity }}
         />
         <Input
@@ -161,11 +173,9 @@ export default function Home() {
         </div>
         <a href={urlToImage} target="_blank" rel="noreferrer">
           Otwórz plik
-        </a>{' '}
+        </a>{" "}
         <a
-          href={`https://res.cloudinary.com/type-of-web/image/fetch/${encodeURIComponent(
-            urlToImage
-          )}`}
+          href={`https://res.cloudinary.com/type-of-web/image/fetch/${urlToImage}`}
           target="_blank"
           rel="noreferrer"
         >
@@ -174,13 +184,13 @@ export default function Home() {
       </section>
       <section className="result">
         <CoverImage
-          text={text}
+          text={decode(text)}
           images={getArray(images)}
           widths={getArray(widths)}
           heights={getArray(heights)}
           fontSize={fontSize + "px"}
           gap={gap + "px"}
-          overlayColor={overlayColor}
+          overlayColor={"#" + overlayColor}
           overlayOpacity={overlayOpacity}
         />
       </section>

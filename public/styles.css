@@ -2,6 +2,9 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: geometricPrecision;
 }
 
 body {

@@ -27,7 +27,7 @@ export default async function handler(
 <base href="${process.env.NEXT_PUBLIC_HOST}" />
 <style>${appCss}</style>
 <style>${coverImageCss}</style>
-<style>${fontCss}</style>
+<style>${await fontCss()}</style>
 ${getHtml(parsedReq)}
       `.trim();
 
@@ -60,8 +60,8 @@ function parseRequest(req: NextApiRequest): ParsedRequest {
     images: getArray(req.query.images),
     widths: getArray(req.query.widths),
     heights: getArray(req.query.heights),
-    fontSize: req.query.fontSize + "px",
-    gap: req.query.gap + "px",
+    fontSize: (req.query.fontSize || 100) + "px",
+    gap: (req.query.gap || 100) + "px",
     overlayColor: getString(req.query.overlayColor),
     overlayOpacity: getString(req.query.overlayOpacity),
   };

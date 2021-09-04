@@ -1,6 +1,12 @@
 import marked from "marked";
 import { getDefaultImages } from "../utils/parseRequest";
-import { ImageProps } from "../utils/types";;
+import { ImageProps } from "../utils/types";
+import twemoji from 'twemoji';
+
+const emojify = (text: string) => twemoji.parse(text, (icon) => {
+  const img = icon.toLowerCase().split('-').filter(u => u !== 'fe0f' && u!=='fe0e').join('_');
+  return `https://github.com/typeofweb/apple-emoji-linux/raw/master/png/128/emoji_u${img}.png`;
+});
 
 export const CoverImage = ({
   images,
@@ -39,7 +45,7 @@ export const CoverImage = ({
           <div
             className={"heading"}
             style={{ fontSize }}
-            dangerouslySetInnerHTML={{ __html: marked(text).trim() }}
+            dangerouslySetInnerHTML={{ __html: emojify(marked(text)).trim() }}
           />
         </div>
       </div>

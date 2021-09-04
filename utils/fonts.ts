@@ -30,21 +30,21 @@ export const fontCss = async () => {
   font-family: 'Fira Sans';
   font-style: normal;
   font-weight: normal;
-  src: url(${rglr}) format('woff2');
+  src: url(data:font/woff2;charset=utf-8;base64,${rglr}) format('woff2');
 }
 
 @font-face {
   font-family: 'Fira Sans';
   font-style: normal;
   font-weight: bold;
-  src: url(${bold}) format('woff2');
+  src: url(data:font/woff2;charset=utf-8;base64,${bold}) format('woff2');
 }
 
 @font-face {
   font-family: 'Fira Mono';
   font-style: normal;
   font-weight: normal;
-  src: url(${mono}) format("woff2");
+  src: url(data:font/woff2;charset=utf-8;base64,${mono}) format("woff2");
 }
 `;
 };

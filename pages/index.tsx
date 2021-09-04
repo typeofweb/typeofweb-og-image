@@ -1,6 +1,7 @@
 import { useRouter } from "next/dist/client/router";
 import { createElement, useEffect, useRef, useState } from "react";
 import { CoverImage } from "../components/CoverImage";
+import { publicUrl } from "../utils/constants";
 import { getArray } from "../utils/parseRequest";
 
 type InputProps = Omit<JSX.IntrinsicElements["input"], "onInput"> & {
@@ -83,13 +84,15 @@ export default function Home() {
 
   useEffect(() => {
     setDidRender(true);
-  }, [])
+  }, []);
 
   const router = useRouter();
 
   if (!didRender) {
     return null;
   }
+
+  const urlToImage = `${publicUrl}/api${router.asPath}`;
 
   return (
     <div>
@@ -156,20 +159,30 @@ export default function Home() {
             </button>
           ))}
         </div>
+        <a href={urlToImage} target="_blank" rel="noreferrer">
+          Otwórz plik
+        </a>{' '}
+        <a
+          href={`https://res.cloudinary.com/type-of-web/image/fetch/${encodeURIComponent(
+            urlToImage
+          )}`}
+          target="_blank"
+          rel="noreferrer"
+        >
+          Otwórz Cloudinary
+        </a>
       </section>
       <section className="result">
-        <a href={`/api${router.asPath}`} target="_blank" rel="noreferrer">
         <CoverImage
           text={text}
           images={getArray(images)}
           widths={getArray(widths)}
           heights={getArray(heights)}
           fontSize={fontSize + "px"}
-          gap={gap+"px"}
+          gap={gap + "px"}
           overlayColor={overlayColor}
           overlayOpacity={overlayOpacity}
         />
-        </a>
       </section>
     </div>
   );

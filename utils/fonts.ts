@@ -1,9 +1,9 @@
 import Fs from 'fs';
 import Path from 'path';
 
-const mono = Fs.readFileSync(Path.join(process.cwd(), '..', 'public', 'fonts', 'firamono-regular-typeofweb.woff2')).toString('base64');
-const rglr = Fs.readFileSync(Path.join(process.cwd(), '..', 'public', 'fonts', 'firasans-regular-typeofweb.woff2')).toString('base64');
-const bold = Fs.readFileSync(Path.join(process.cwd(), '..', 'public', 'fonts', 'firasans-semibold-typeofweb.woff2')).toString('base64');
+const mono = Fs.readFileSync(Path.join(process.cwd(), 'public', 'fonts', 'firamono-regular-typeofweb.woff2')).toString('base64');
+const rglr = Fs.readFileSync(Path.join(process.cwd(), 'public', 'fonts', 'firasans-regular-typeofweb.woff2')).toString('base64');
+const bold = Fs.readFileSync(Path.join(process.cwd(), 'public', 'fonts', 'firasans-semibold-typeofweb.woff2')).toString('base64');
 
 export const fontCss = `
 @font-face {

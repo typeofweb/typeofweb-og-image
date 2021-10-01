@@ -3,6 +3,7 @@ import { createElement, useEffect, useRef, useState } from "react";
 import { CoverImage } from "../components/CoverImage";
 import { publicUrl } from "../utils/constants";
 import { getArray } from "../utils/parseRequest";
+import { getCloudinaryUrl } from "../utils/saveToCloudinary";
 
 type InputProps = Omit<JSX.IntrinsicElements["input"], "onInput"> & {
   onInput(value: string): void;
@@ -28,7 +29,7 @@ const useUrlState = <T extends string | string[]>(
   defaultValue: T
 ): [T, (val: T) => void] => {
   const isArray = Array.isArray(defaultValue);
-  const cast = (v: string | string[]) => isArray ? getArray(v) : v;
+  const cast = (v: string | string[]) => (isArray ? getArray(v) : v);
 
   const router = useRouter();
   const state = cast(router.query[name] || defaultValue);
@@ -139,19 +140,25 @@ export default function Home() {
                   setWidths(newWidths);
                 }}
               />
-              <button type="button" onClick={() => {
-                setImages(images.slice(0, i).concat(images.slice(i + 1)));
-                // setWidths(widths.slice(0, i).concat(widths.slice(i + 1)));
-              }}>
+              <button
+                type="button"
+                onClick={() => {
+                  setImages(images.slice(0, i).concat(images.slice(i + 1)));
+                  // setWidths(widths.slice(0, i).concat(widths.slice(i + 1)));
+                }}
+              >
                 Usuń {i + 1}
               </button>
             </div>
           );
         })}
-        <button type="button" onClick={() => {
-          setImages([...images, "URL"])
-          // setWidths([...widths, "200"])
-        }}>
+        <button
+          type="button"
+          onClick={() => {
+            setImages([...images, "URL"]);
+            // setWidths([...widths, "200"])
+          }}
+        >
           Dodaj obrazek
         </button>
         <Input
@@ -218,15 +225,9 @@ export default function Home() {
         <a href={urlToImage} target="_blank" rel="noreferrer">
           Otwórz plik
         </a>{" "}
-        <a
-          href={`https://res.cloudinary.com/type-of-web/image/fetch/${encodeURIComponent(
-            urlToImage
-          )}`}
-          target="_blank"
-          rel="noreferrer"
-        >
+        {/* <a href={getCloudinaryUrl(urlToImage)} target="_blank" rel="noreferrer">
           Otwórz Cloudinary
-        </a>
+        </a> */}
       </section>
       <section className="result">
         <CoverImage

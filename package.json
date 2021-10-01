@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "chrome-aws-lambda": "10.1.0",
+    "cloudinary": "1.26.3",
+    "cloudinary-core": "2.11.4",
     "marked": "3.0.2",
     "next": "11.1.2",
     "punycode": "2.1.1",
